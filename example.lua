@@ -1,6 +1,11 @@
 --[[ Args:
  1st, number, Time to sleep between each generation update.
  2nd, number, Text scale of the monitor.
+
+ THIS RUNS ONLY ON A COMPUTERCRAFT WITH A CONNECTED MONITOR.
+
+ Description: A simple example that continuously run through all available
+ generator and display the generation process on a computerCraft monitor.
 ]]
 local args = { ... }
 
@@ -85,8 +90,13 @@ while true do
     -- Since a computer is a coroutine by itself, we can't sleep inside an other
     -- sub-coroutine, which make the use of filters impossible here.
 
-    -- Instead we use a postprocessing callback called on this "thread" after each updates:
-    local postProcess = ccPostProcess.wait(WAIT_TIME)
+    -- Instead we use a postprocessing callback called on this "thread" after each updates.
+    -- Since the minimal sleep time possible is 1 game tick (0.05s), we remove the wait postprocess
+    -- if it's lower (beware, now the generation can't run more than 30seconds before computerCraft terminate this program).
+    local postProcess = function (_) return _ end -- A callback that do nothing
+    if WAIT_TIME >= 0.05 then
+        postProcess = ccPostProcess.wait(WAIT_TIME)
+    end
     -- Note: callback chaining is possible by composing them on the last optional argument.
     -- See "libmaze.postprocess.computerCraft" to see how postprocess can be user created.
 
