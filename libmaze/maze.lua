@@ -63,7 +63,10 @@ function Maze:new(width, height, producer, onUpdates)
     local m = { width = width, height = height, cells = {} }
     setmetatable(m, self)
     self.__index = self
-    self:update_grid(producer, optFunc.create1(onUpdates))
+    for i = 1, width*height, 1 do
+        m.cells[i] = 0
+    end
+    m:update_grid(producer, optFunc.create1(onUpdates))
     return m
 end
 
