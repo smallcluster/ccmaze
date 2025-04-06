@@ -166,7 +166,7 @@ function OSGenerator:generate()
     local updates = {}
     for i = 1, self.height, 1 do
         for j = 1, self.width, 1 do
-            local rowsCond = (i % 2 == 0 and j > 1 and j < self.width)
+            local rowsCond = (i % 2 == 0 and j > 1 and j < self.width and i < self.height)
             local lastColCond = (i > 1 and i < self.height and j == self.width - 1)
             if rowsCond or lastColCond then
                 table.insert(updates, stateUpdate.new(i, j, CELL_STATES.VISITED, 0))

@@ -165,7 +165,7 @@ function KruskalGenerator:generate()
     local updates = {}
     for i = 1, self.height, 1 do
         for j = 1, self.width, 1 do
-            if (i % 2 == 0) and (j % 2 == 0) then
+            if (i % 2 == 0) and (j % 2 == 0) and i < self.height and j < self.width  then
                 table.insert(updates, stateUpdate.new(i, j, CELL_STATES.UNVISITED, 0))
             else
                 table.insert(updates, stateUpdate.new(i, j, CELL_STATES.WALL, 0))
