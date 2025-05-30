@@ -6,18 +6,24 @@ local base_url = "https://raw.githubusercontent.com/smallcluster/ccmaze/refs/hea
 
 -- Remove the old ccmaze directory if it exists.
 if fs.exists( "ccmaze" ) then
+    print( "Removing old ccmaze directory..." )
     fs.delete( "ccmaze" )
 end
 
 -- Create the directories.
+print("Creating ccmaze directory...")
 for _, dir in ipairs(dirs) do
     fs.makeDir(dir)
 end
 
 -- Download the files.
+local currentFile = 0
+local totalFiles = #files
 for _, file in ipairs(files) do
+    currentFile = currentFile + 1
     local sUrl = base_url .. file
     -- Get the file from the URL.
+    print("Downloading (" .. currentFile .. "/" .. totalFiles .. "): " .. sUrl)
     local response = http.get(sUrl)
     local sResponse = response.readAll()
     response.close()
@@ -26,6 +32,9 @@ for _, file in ipairs(files) do
     f.write(sResponse)
     f.close()
 end
+
+print("All files downloaded successfully!")
+print("You can now run the demo with: ccmaze-demo.lua")
 """
 
 # find all files in the ccmaze directory and its subdirectories
