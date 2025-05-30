@@ -1,4 +1,4 @@
--- This file was auto-generated on 2025-05-30 21:45:32
+-- This file was auto-generated on 2025-05-31 01:12:57
 
 local dirs = {
     "ccmaze/filters",
@@ -9,6 +9,7 @@ local dirs = {
 }
 
 local files = {
+    "ccmaze/init.lua",
     "ccmaze/maze.lua",
     "ccmaze/stateUpdate.lua",
     "ccmaze/filters/builder.lua",
@@ -24,7 +25,6 @@ local files = {
     "ccmaze/utils/optFunc.lua",
     "ccmaze/utils/shuffle.lua",
     "ccmaze/utils/stack.lua",
-    "ccmaze-demo.lua",
 }
 
 
