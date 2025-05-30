@@ -59,17 +59,17 @@ def files_to_lua(files, var_name):
     lua_list += "}\n"
     return lua_list
 
-if __name__ == "__main__":
+def save_lua_file():
     directory = "ccmaze"
-
     dirs = find_dirs(directory)
     files = find_files(directory)
-
     files_array = files_to_lua(files, "files")
     dirs_array = files_to_lua(dirs, "dirs")
-
     # Create the Lua code
     with open("ccmaze-dl.lua", "w") as f:
         f.write(dirs_array+"\n")
         f.write(files_array+"\n")
         f.write(lua_body_code)
+
+if __name__ == "__main__":
+    save_lua_file()
