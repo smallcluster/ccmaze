@@ -34,7 +34,6 @@ for _, file in ipairs(files) do
 end
 
 print("All files downloaded successfully!")
-print("You can now run the demo with: ccmaze-demo.lua")
 """
 
 # find all files in the ccmaze directory and its subdirectories
