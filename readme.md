@@ -1,35 +1,62 @@
 # ccmaze
 
+A lua library for generating mazes represented with a grid of states model. 
+
 ## Installation
 
-The ccmaze library exist in two different forms :
+The ccmaze library exist in 3 different versions :
 
-- The original modularized code
-- The minified code
+- As a **single lua file**: Auto generated from the lua module. Easier to get or share. It's the **recommended version for most user**.
+- As a **lua module**: This is the original source code. Recommended when learning ccmaze as its structuration also serves as documentation. It's also the only one that do not require computercraft, making it ideal as a pure lua library.
+- As a **single minified lua file**: Auto generated from the single file version. For when size matter, but debugging doesn't (cryptic obfuscation due to the aggressive minification process).
 
-### Minimized version
+Here is a quick comparison :
 
-It's the easiest one to get up and running, this will download the latest version of **ccmaze** :
+|version|computercraft only|modular|debuggable|size|
+|-------|------------------|-------|----------|----|
+|single file| yes | no |yes|~46,8ko|
+|lua module| no | yes |yes|~46,6ko|
+|single minified file| yes | no |no|~12,8ko|
+
+All versions are interchangeable by exposing the same *require* API for their submodules. Take a look at the provided demo code to learn how to use ccmaze.
+
+### Single Lua file
+
+Simply download the `ccmaze.lua` :
 
 ```shell
 wget https://raw.githubusercontent.com/smallcluster/ccmaze/refs/heads/master/ccmaze.lua
 ```
 
-### Modular version
+### Single minified lua file 
 
+Simply download the `ccmaze-min.lua` as `ccmaze.lua` :
 
-On your computercraft, fetch the ccmaze downloader tool :
+```shell
+wget https://raw.githubusercontent.com/smallcluster/ccmaze/refs/heads/master/ccmaze-min.lua ccmaze.lua
+```
+
+### Lua module
+
+Since this version is composed of multiple files, a downloader is provided to easily fetch the library.
 
 ```shell
 wget https://raw.githubusercontent.com/smallcluster/ccmaze/refs/heads/master/ccmaze-dl.lua
 ```
 
-### Demo
+By running `ccmaze-dl.lua`, the module `ccmaze` will be downloaded in your working directory.
+
+## Demo
+
+**Requirements** :
+    - At least one of the three version of `ccmaze` in its working directory.
+    - An advanced computer next to a monitor of any size
+
+A demo cycling through all available generator algorithm with visual animation is provided as an example :
 
 ```shell
 wget https://raw.githubusercontent.com/smallcluster/ccmaze/refs/heads/master/ccmaze-demo.lua
 ```
-
 
 ## Available generators
 
@@ -39,20 +66,5 @@ wget https://raw.githubusercontent.com/smallcluster/ccmaze/refs/heads/master/ccm
 
 ## Architecture
 
-```plantuml
-@startuml
-:generator;
-note right
-Produce state updates that can affect multiples cells
-end note
-:filter;
-note right
-Do stuff with the state update, might alter it.
-end note
-:maze;
-note right
-Update its cell based on the received update
-end note
-@enduml
-```
+TODO
 
