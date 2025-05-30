@@ -1,5 +1,4 @@
 import os
-from datetime import datetime
 
 lua_body_code = """
 local base_url = "https://raw.githubusercontent.com/smallcluster/ccmaze/refs/heads/master/"
@@ -71,7 +70,6 @@ if __name__ == "__main__":
 
     # Create the Lua code
     with open("ccmaze-dl.lua", "w") as f:
-        f.write(f"-- This file was auto-generated on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
         f.write(dirs_array+"\n")
         f.write(files_array+"\n")
         f.write(lua_body_code)

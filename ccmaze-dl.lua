@@ -1,5 +1,3 @@
--- This file was auto-generated on 2025-05-31 01:32:07
-
 local dirs = {
     "ccmaze/filters",
     "ccmaze/generators",
