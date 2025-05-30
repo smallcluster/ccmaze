@@ -8,10 +8,10 @@ Usage :
 python ./tools/installer_builder.py
 ```
 
-## Minifiyer
+## Minifier
 
 Usage :
 
 ```bash
-python ./tools/minifiyer.py
+python ./tools/minifier.py
 ```
