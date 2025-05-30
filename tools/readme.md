@@ -8,7 +8,15 @@ Usage :
 python ./tools/installer_builder.py
 ```
 
-## Minifier
+## Packer
+
+**Usage** :
+
+```bash
+python ./tools/minifier.py
+```
+
+## Minify
 
 **Requirement** : 
 
@@ -17,5 +25,17 @@ python ./tools/installer_builder.py
 **Usage** :
 
 ```bash
-python ./tools/minifier.py
+luamin -f ccmaze.lua > ccmaze-min.lua
+```
+
+## Build
+
+**Requirement** : 
+
+- [luamin](https://github.com/mathiasbynens/luamin) installed and available in your shell paths.
+
+**Usage** :
+
+```bash
+python ./tools/build.py
 ```

@@ -1,5 +1,7 @@
 import os
 
+# Emulate the Lua require function by using a lookup table
+# that store each lua module as a function.
 lua_custom_require = """
 local files = {}
 local globalRequire = require
@@ -34,24 +36,18 @@ def lua_file_function(path):
     code += "\nend\n"
     return code
 
-
-if __name__ == "__main__":
-    directory = "ccmaze"
-    files = find_files(directory)
-    #f.write(f"-- This file was auto-generated on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-
-    # Create the merged Lua code of all modules
+def generate_lua_code(files):
     lua_code = lua_custom_require
     for path in files:
-        lua_code+=lua_file_function(path)
+        lua_code += lua_file_function(path)
     lua_code += "return ccmaze"
+    return lua_code
 
-    # save it to a tmp file
-    with open("ccmaze-tmp.lua", "w") as f:
+def save_lua_file():
+    directory = "ccmaze"
+    files = find_files(directory)
+    # Create the merged Lua code of all modules
+    lua_code = generate_lua_code(files)
+    # save it
+    with open("ccmaze.lua", "w") as f:
         f.write(lua_code)
-
-    # Minify it using luamin
-    os.system("luamin -f ccmaze-tmp.lua > ccmaze.lua")
-
-    # Remove the tmp file
-    os.remove("ccmaze-tmp.lua")
