@@ -1,9 +1,9 @@
----@module 'libmaze.postprocess.computerCraft'
+---@module 'ccmaze.postprocess.computerCraft'
 local computerCraft = {}
 
 --[[ PRIVATE ]]
 
-local builder = require("libmaze.postprocess.builder")
+local builder = require("ccmaze.postprocess.builder")
 
 ---@param updates table Array of StateUpdate.
 ---@param time number The time to wait.

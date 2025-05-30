@@ -1,4 +1,4 @@
----@module 'libmaze.stateUpdate'
+---@module 'ccmaze.stateUpdate'
 local stateUpdate = {}
 
 --[[ PRIVATE ]]

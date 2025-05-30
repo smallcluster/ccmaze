@@ -1,4 +1,4 @@
----@module 'libmaze.filters.builder'
+---@module 'ccmaze.filters.builder'
 local builder = {}
 
 --[[ PUBLIC ]]

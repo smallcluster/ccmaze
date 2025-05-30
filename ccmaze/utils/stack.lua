@@ -7,7 +7,7 @@ local stack = {}
 
 --[[ PRIVATE ]]
 
-local shuffle = require "libmaze.utils.shuffle"
+local shuffle = require "ccmaze.utils.shuffle"
 
 ---@class Stack A simple stack object.
 ---@field private _data table The underlying stack storage.

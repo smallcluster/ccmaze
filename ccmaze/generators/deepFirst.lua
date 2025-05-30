@@ -13,14 +13,14 @@
     The generator produces updates on the state of the maze during the generation process,
     which can be used to visualize the maze construction in a step by step manner.
 ]]
----@module 'libmaze.generators.deepSearch'
+---@module 'ccmaze.generators.deepSearch'
 local deepFirstGenerator = {}
 
 --[[ PRIVATE ]]
 
-local stateUpdate = require("libmaze.stateUpdate")
-local abstractGenerator = require("libmaze.generators.abstract")
-local stack = require("libmaze.utils.stack")
+local stateUpdate = require("ccmaze.stateUpdate")
+local abstractGenerator = require("ccmaze.generators.abstract")
+local stack = require("ccmaze.utils.stack")
 
 ---@enum CELL_STATES Define all possible cell states for the generator.
 local CELL_STATES = {

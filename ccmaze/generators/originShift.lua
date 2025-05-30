@@ -16,13 +16,13 @@
     The generator produces updates on the state of the maze during the generation process,
     which can be used to visualize the maze construction in a step by step manner.
 ]]
----@module 'libmaze.generators.originShift'
+---@module 'ccmaze.generators.originShift'
 local originShiftGenerator = {}
 
 --[[ PRIVATE ]]
 
-local stateUpdate = require("libmaze.stateUpdate")
-local abstractGenerator = require("libmaze.generators.abstract")
+local stateUpdate = require("ccmaze.stateUpdate")
+local abstractGenerator = require("ccmaze.generators.abstract")
 
 ---@class Node A node to represent a tree structure. Each node point to only one parent, up to the root.
 ---@field parent Node | nil The optional parent node. A root node do not have a parent (nil value).

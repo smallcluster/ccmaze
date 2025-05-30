@@ -1,5 +1,5 @@
-local maze = require("libmaze.maze")
-local kg = require("libmaze.generators.kruskal")
+local maze = require("ccmaze.maze")
+local kg = require("ccmaze.generators.kruskal")
 
 local function dump(o)
     if type(o) == 'table' then

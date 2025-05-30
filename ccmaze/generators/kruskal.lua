@@ -14,15 +14,15 @@
     The generator produces updates on the state of the maze during the generation process,
     which can be used to visualize the maze construction in a step by step manner.
 ]]
----@module 'libmaze.generators.Kruskal'
+---@module 'ccmaze.generators.Kruskal'
 local kruskalGenerator = {}
 
 ---[[ PRIVATE ]]
 
-local stateUpdate = require("libmaze.stateUpdate")
-local abstractGenerator = require("libmaze.generators.abstract")
-local dSet = require("libmaze.utils.dSet")
-local stack = require("libmaze.utils.stack")
+local stateUpdate = require("ccmaze.stateUpdate")
+local abstractGenerator = require("ccmaze.generators.abstract")
+local dSet = require("ccmaze.utils.dSet")
+local stack = require("ccmaze.utils.stack")
 
 
 ---@enum DIRECTIONS Define possible wall orientations.

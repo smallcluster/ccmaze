@@ -1,4 +1,4 @@
----@module 'libmaze.generators.abstract'
+---@module 'ccmaze.generators.abstract'
 local abstractGenerator = {}
 
 --[[ PRIVATE ]]

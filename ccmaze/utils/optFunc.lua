@@ -1,4 +1,4 @@
----@module 'libmaze.utils.optFunc'
+---@module 'ccmaze.utils.optFunc'
 local optFunc = {}
 
 --[[ PUBLIC ]]

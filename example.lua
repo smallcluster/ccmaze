@@ -9,6 +9,7 @@
 ]]
 local args = { ... }
 
+
 local WAIT_TIME = tonumber(args[1] or "0.05")
 local TEXT_SCALE = tonumber(args[2] or "1.0")
 

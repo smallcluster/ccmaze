@@ -1,9 +1,9 @@
----@module 'libmaze.postprocess.builder'
+---@module 'ccmaze.postprocess.builder'
 local builder = {}
 
 --[[ PRIVATE ]]
 
-local optFunc = require("libmaze.utils.optFunc")
+local optFunc = require("ccmaze.utils.optFunc")
 
 --[[ PUBLIC ]]
 

@@ -1,9 +1,9 @@
----@module 'libmaze.filters.computerCraft'
+---@module 'ccmaze.filters.computerCraft'
 local computerCraft = {}
 
 --[[ PRIVATE ]]
 
-local builder = require("libmaze.filters.builder")
+local builder = require("ccmaze.filters.builder")
 
 ---@param updates table Array of StateUpdate.
 ---@param monitor any The ComputerCraft monitor peripheral to update.

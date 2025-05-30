@@ -1,4 +1,4 @@
----@module 'libmaze.utils.shuffle'
+---@module 'ccmaze.utils.shuffle'
 local shuffle = {}
 
 --[[ PRIVATE ]]

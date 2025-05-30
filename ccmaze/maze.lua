@@ -15,12 +15,12 @@
     real-time animations or visual feedback during the maze generation process.
 --]]
 
----@module 'libmaze.maze'
+---@module 'ccmaze.maze'
 local maze = {}
 
 --[[ PRIVATE ]]
 
-local optFunc = require("libmaze.utils.optFunc")
+local optFunc = require("ccmaze.utils.optFunc")
 
 ---@class Maze A maze is a grid composed of cells represented by a state (integer).
 ---@field width integer The grid width.
