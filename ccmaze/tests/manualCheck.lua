@@ -1,3 +1,5 @@
+local manualCheck = {}
+
 local maze = require("ccmaze.maze")
 local kg = require("ccmaze.generators.kruskal")
 
@@ -14,6 +16,6 @@ local function dump(o)
     end
  end
 
-local m = maze.new(20, 20, kg.new(20,20):producer())
+-- local m = maze.new(20, 20, kg.new(20,20):producer())
 
-print(dump(m.cells))
+return manualCheck
