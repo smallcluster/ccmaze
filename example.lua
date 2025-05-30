@@ -13,12 +13,12 @@ local WAIT_TIME = tonumber(args[1] or "0.05")
 local TEXT_SCALE = tonumber(args[2] or "1.0")
 
 -- Imports
-local maze = require("libmaze.maze")
-local kg = require("libmaze.generators.kruskal")
-local dsg = require("libmaze.generators.deepFirst")
-local osg = require("libmaze.generators.originShift")
-local ccFilters = require("libmaze.filters.computerCraft")
-local ccPostProcess = require("libmaze.postprocess.computerCraft")
+local maze = require("ccmaze.maze")
+local kg = require("ccmaze.generators.kruskal")
+local dsg = require("ccmaze.generators.deepFirst")
+local osg = require("ccmaze.generators.originShift")
+local ccFilters = require("ccmaze.filters.computerCraft")
+local ccPostProcess = require("ccmaze.postprocess.computerCraft")
 
 -- Monitor settings.
 local m = peripheral.find("monitor")
@@ -84,7 +84,7 @@ while true do
         m,
         1, 1,
         scene.name .. ": ", maxNameSize + 2)
-    -- Note: See "libmaze.filters.computerCraft" to see how filters can be user created.
+    -- Note: See "ccmaze.filters.computerCraft" to see how filters can be user created.
 
     -- Let's wait a little after each update to be able to visualize the generation.
     -- Since a computer is a coroutine by itself, we can't sleep inside an other
@@ -98,7 +98,7 @@ while true do
         postProcess = ccPostProcess.wait(WAIT_TIME)
     end
     -- Note: callback chaining is possible by composing them on the last optional argument.
-    -- See "libmaze.postprocess.computerCraft" to see how postprocess can be user created.
+    -- See "ccmaze.postprocess.computerCraft" to see how postprocess can be user created.
 
     -- We create a new maze, each update will run through our filters and postprocessing.
     maze.new(w, h, finalProducer, postProcess)
