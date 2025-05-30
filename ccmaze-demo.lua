@@ -14,12 +14,19 @@ local WAIT_TIME = tonumber(args[1] or "0.05")
 local TEXT_SCALE = tonumber(args[2] or "1.0")
 
 -- Imports
-local maze = require("ccmaze.maze")
-local kg = require("ccmaze.generators.kruskal")
-local dsg = require("ccmaze.generators.deepFirst")
-local osg = require("ccmaze.generators.originShift")
-local ccFilters = require("ccmaze.filters.computerCraft")
-local ccPostProcess = require("ccmaze.postprocess.computerCraft")
+local ccmaze = require("ccmaze")
+
+-- ccmaze exists in two versions: modular and minimized.
+-- To ensure compatibility with both, we use ccmaze.require instead of Lua's built-in require.
+-- In the modular version, ccmaze.require is the same as the standard require.
+-- In the minimized version, it uses an internal lookup table to simulate module loading.
+-- By following this pattern, your code will work seamlessly with either version.
+local maze = ccmaze.require("ccmaze.maze")
+local kg = ccmaze.require("ccmaze.generators.kruskal")
+local dsg = ccmaze.require("ccmaze.generators.deepFirst")
+local osg = ccmaze.require("ccmaze.generators.originShift")
+local ccFilters = ccmaze.require("ccmaze.filters.computerCraft")
+local ccPostProcess = ccmaze.require("ccmaze.postprocess.computerCraft")
 
 -- Monitor settings.
 local m = peripheral.find("monitor")
