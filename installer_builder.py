@@ -56,7 +56,7 @@ if __name__ == "__main__":
 
     dirs = find_dirs(directory)
     files = find_files(directory)
-    files.append("example.lua")  # Add example.lua to the list of files
+    files.append("ccmaze-demo.lua")
 
     files_array = files_to_lua(files, "files")
     dirs_array = files_to_lua(dirs, "dirs")
