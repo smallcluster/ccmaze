@@ -2,7 +2,7 @@
 
 ![](imgs/header.webp?raw=true)
 
-A lua library for generating mazes modelized by a grid of states. 
+A computercraft focussed lua library for generating mazes!
 
 ## Installation
 
