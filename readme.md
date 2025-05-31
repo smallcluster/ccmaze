@@ -7,16 +7,16 @@ A lua library for generating mazes represented with a grid of states model.
 The ccmaze library exist in 3 different versions :
 
 - As a **single lua file**: Auto generated from the lua module. Easier to get or share. It's the **recommended version for most user**.
-- As a **lua module**: This is the original source code. Recommended when learning ccmaze as its structuration also serves as documentation. It's also the only one that do not require computercraft, making it ideal as a pure lua library.
+- As a **lua module**: This is the original source code. Recommended when learning ccmaze as its structuration also serves as documentation.
 - As a **single minified lua file**: Auto generated from the single file version. For when size matter, but debugging doesn't (cryptic obfuscation due to the aggressive minification process).
 
 Here is a quick comparison :
 
-|version|computercraft only|modular|debuggable|size|
-|-------|------------------|-------|----------|----|
-|single file| yes | no |yes|~46,8ko|
-|lua module| no | yes |yes|~46,6ko|
-|single minified file| yes | no |no|~12,8ko|
+| version              | modular | debuggable | size    |
+| -------------------- | ------- | ---------- | ------- |
+| single file          | no      | yes        | ~46,8ko |
+| lua module           | yes     | yes        | ~46,6ko |
+| single minified file | no      | no         | ~12,8ko |
 
 All versions are interchangeable by exposing the same *require* API for their submodules. Take a look at the provided demo code to learn how to use ccmaze.
 
