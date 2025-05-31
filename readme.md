@@ -51,8 +51,9 @@ By running `ccmaze-dl.lua`, the module `ccmaze` will be downloaded in your worki
 ## Demo
 
 **Requirements** :
-    - At least one of the three version of `ccmaze` in its working directory.
-    - An advanced computer next to a monitor of any size
+
+- At least one of the three version of `ccmaze` in its working directory.
+- An advanced computer next to a monitor of any size
 
 A demo cycling through all available generator algorithm with visual animation is provided as an example (the animation at the top of this page) :
 
