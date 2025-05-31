@@ -13,7 +13,7 @@ python ./tools/installer_builder.py
 **Usage** :
 
 ```bash
-python ./tools/minifier.py
+python ./tools/packer.py
 ```
 
 ## Minify
@@ -29,6 +29,8 @@ luamin -f ccmaze.lua > ccmaze-min.lua
 ```
 
 ## Build
+
+*All of the above, in one go.*
 
 **Requirement** : 
 
