@@ -38,7 +38,7 @@ local Maze = {
 -- Note: update are consumed for left to right in the given array by the generator.
 ---@param producer thread The coroutine of the maze generator that produces updates.
 ---@param onUpdates function An optional post processing callback on retrieved updates.
-function Maze:update_grid(producer, onUpdates)
+function Maze:rebuild(producer, onUpdates)
     repeat
         local status, updates = coroutine.resume(producer)
         if updates ~= nil and status then
@@ -66,7 +66,7 @@ function Maze:new(width, height, producer, onUpdates)
     for i = 1, width*height, 1 do
         m.cells[i] = 0
     end
-    m:update_grid(producer, optFunc.create1(onUpdates))
+    m:rebuild(producer, optFunc.create1(onUpdates))
     return m
 end
 
