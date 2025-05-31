@@ -1,7 +1,7 @@
 import os
 
 lua_body_code = """
-local base_url = "https://raw.githubusercontent.com/smallcluster/ccmaze/refs/heads/master/"
+local base_url = "https://raw.githubusercontent.com/smallcluster/ccmaze/v1.0.0/"
 
 -- Remove the old ccmaze directory if it exists.
 if fs.exists( "ccmaze" ) then
