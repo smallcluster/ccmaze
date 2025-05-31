@@ -2,7 +2,7 @@
 
 ![](imgs/header.webp?raw=true)
 
-A lua library for generating mazes represented with a grid of states model. 
+A lua library for generating mazes with a grid of states representation. 
 
 ## Installation
 
@@ -54,7 +54,7 @@ By running `ccmaze-dl.lua`, the module `ccmaze` will be downloaded in your worki
     - At least one of the three version of `ccmaze` in its working directory.
     - An advanced computer next to a monitor of any size
 
-A demo cycling through all available generator algorithm with visual animation is provided as an example :
+A demo cycling through all available generator algorithm with visual animation is provided as an example (the animation at the top of this page) :
 
 ```shell
 wget https://raw.githubusercontent.com/smallcluster/ccmaze/refs/heads/master/ccmaze-demo.lua
