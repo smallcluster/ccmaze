@@ -14,21 +14,21 @@
     which can be used to visualize the maze construction in a step by step manner.
 ]]
 ---@module 'ccmaze.generators.deepSearch'
-local deepFirstGenerator = {}
+local deepFirstGenerator = {
+    ---@enum deepFirstGenerator.CELL_STATES Define all possible cell states for the generator.
+    CELL_STATES = {
+        VISITED = 1,
+        WALL = 2,
+        UNVISITED = 3,
+        SELECTED = 4
+    }
+}
 
 --[[ PRIVATE ]]
 
 local stateUpdate = require("ccmaze.stateUpdate")
 local abstractGenerator = require("ccmaze.generators.abstract")
 local stack = require("ccmaze.utils.stack")
-
----@enum CELL_STATES Define all possible cell states for the generator.
-local CELL_STATES = {
-    VISITED = 1,
-    WALL = 2,
-    UNVISITED = 3,
-    SELECTED = 4
-}
 
 ---@class DFSGenerator: Generator Implements a maze generator using a recursive backtracking algorithm.
 ---@field private _internalWidth integer Width of the internal maze (excluding wall cells).
@@ -44,7 +44,6 @@ local DFSGenerator = {
     _path = {},
     _count = 0,
     _startCoords = {},
-    cellStates = CELL_STATES
 }
 
 ---@return number # The normalized generation progression.
@@ -63,12 +62,12 @@ function DFSGenerator:_init()
     -- All cells are unvisited
     for i = 1, self._internalHeight, 1 do
         for j = 1, self._internalWidth, 1 do
-            self:_setState({ i = i, j = j }, CELL_STATES.UNVISITED)
+            self:_setState({ i = i, j = j }, deepFirstGenerator.CELL_STATES.UNVISITED)
         end
     end
     -- Set the first cell coordinates (top-left) to be the start of the path
     self._startCoords = { i = math.random(self._internalHeight), j = math.random(self._internalWidth) }
-    self:_setState(self._startCoords, CELL_STATES.VISITED)
+    self:_setState(self._startCoords, deepFirstGenerator.CELL_STATES.VISITED)
     self._path:push(self._startCoords)
 end
 
@@ -81,7 +80,6 @@ function DFSGenerator:new(width, height)
     DFSGenerator.__index = DFSGenerator
     setmetatable(DFSGenerator, { __index = getmetatable(obj) })
     setmetatable(obj, DFSGenerator)
-    obj.cellStates = CELL_STATES
     return obj
 end
 
@@ -104,14 +102,14 @@ end
 
 -- Get the state of a cell in the internal maze.
 ---@param coords table The coordinates of the cell.
----@return CELL_STATES # The state for the corresponding cell.
+---@return deepFirstGenerator.CELL_STATES # The state for the corresponding cell.
 function DFSGenerator:_getState(coords)
     return self._cells[(coords.i - 1) * self._internalWidth + coords.j]
 end
 
 -- Set the state of a cell in the internal maze.
 ---@param coords table The coordinates of the cell.
----@param state CELL_STATES The new state for the cell.
+---@param state deepFirstGenerator.CELL_STATES The new state for the cell.
 function DFSGenerator:_setState(coords, state)
     self._cells[(coords.i - 1) * self._internalWidth + coords.j] = state
 end
@@ -120,7 +118,7 @@ end
 ---@param coords table The coordinates of the cell.
 ---@return boolean # True if the cell is unvisited.
 function DFSGenerator:_isUnvisited(coords)
-    return self:_getState(coords) == CELL_STATES.UNVISITED
+    return self:_getState(coords) == deepFirstGenerator.CELL_STATES.UNVISITED
 end
 
 -- Try to get the position of a random unvisited neighbor cell.
@@ -160,14 +158,14 @@ function DFSGenerator:generate()
     for i = 1, self.height, 1 do
         for j = 1, self.width, 1 do
             if (i % 2 == 0) and (j % 2 == 0) and i < self.height and j < self.width then
-                table.insert(updates, stateUpdate.new(i, j, CELL_STATES.UNVISITED, 0))
+                table.insert(updates, stateUpdate.new(i, j, deepFirstGenerator.CELL_STATES.UNVISITED, 0))
             else
-                table.insert(updates, stateUpdate.new(i, j, CELL_STATES.WALL, 0))
+                table.insert(updates, stateUpdate.new(i, j, deepFirstGenerator.CELL_STATES.WALL, 0))
             end
         end
     end
     -- Select the starting position
-    table.insert(updates, self:_updateCell(self._path:peek(), CELL_STATES.SELECTED))
+    table.insert(updates, self:_updateCell(self._path:peek(), deepFirstGenerator.CELL_STATES.SELECTED))
     coroutine.yield(updates)
 
     -- Generation loop
@@ -178,7 +176,7 @@ function DFSGenerator:generate()
         -- Visit the selected cell in the internal maze
         if self:_isUnvisited(coords) then
             self._count = self._count - 1
-            self:_setState(coords, CELL_STATES.VISITED)
+            self:_setState(coords, deepFirstGenerator.CELL_STATES.VISITED)
         end
 
         -- Gets an unvisited neighbors
@@ -189,20 +187,20 @@ function DFSGenerator:generate()
             self._path:push(nextCoords)
             -- Break the wall, deselect the current cell and select the next one
             coroutine.yield({
-                self:_updateWall(coords, nextCoords, CELL_STATES.VISITED),
-                self:_updateCell(coords, CELL_STATES.VISITED),
-                self:_updateCell(nextCoords, CELL_STATES.SELECTED),
+                self:_updateWall(coords, nextCoords, deepFirstGenerator.CELL_STATES.VISITED),
+                self:_updateCell(coords, deepFirstGenerator.CELL_STATES.VISITED),
+                self:_updateCell(nextCoords, deepFirstGenerator.CELL_STATES.SELECTED),
             })
         else
             -- Deselect the current cell and select the previous one in the path
             coroutine.yield({
-                self:_updateCell(coords, CELL_STATES.VISITED),
-                self:_updateCell(self._path:peekOr(self._startCoords), CELL_STATES.SELECTED),
+                self:_updateCell(coords, deepFirstGenerator.CELL_STATES.VISITED),
+                self:_updateCell(self._path:peekOr(self._startCoords), deepFirstGenerator.CELL_STATES.SELECTED),
             })
         end
     end
     -- Deselect the last selected cell
-    coroutine.yield({ self:_updateCell(self._path:popOr(self._startCoords), CELL_STATES.VISITED) })
+    coroutine.yield({ self:_updateCell(self._path:popOr(self._startCoords), deepFirstGenerator.CELL_STATES.VISITED) })
 end
 
 --[[ PUBLIC ]]

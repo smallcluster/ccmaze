@@ -17,7 +17,14 @@
     which can be used to visualize the maze construction in a step by step manner.
 ]]
 ---@module 'ccmaze.generators.originShift'
-local originShiftGenerator = {}
+local originShiftGenerator = {
+    ---@enum originShiftGenerator.CELL_STATES Define all possible cell states for the generator.
+    CELL_STATES = {
+        VISITED = 1,
+        WALL = 2,
+        SELECTED = 3
+    }
+}
 
 --[[ PRIVATE ]]
 
@@ -38,13 +45,6 @@ function Node.new(i, j)
     return { parent = nil, coords = { i = i, j = j } }
 end
 
----@enum CELL_STATES Define all possible cell states for the generator.
-local CELL_STATES = {
-    VISITED = 1,
-    WALL = 2,
-    SELECTED = 3
-}
-
 ---@class OSGenerator: Generator Implements a maze generator using a recursive backtracking algorithm.
 ---@field private _internalWidth integer Width of the internal maze (excluding wall cells).
 ---@field private _internalHeight integer Height of the internal maze (excluding wall cells).
@@ -58,8 +58,7 @@ local OSGenerator = {
     _nodes = {},
     _count = 0,
     _nbSteps = 0,
-    _root = {},
-    cellStates = CELL_STATES
+    _root = {}
 }
 
 ---@return number # The normalized generation progression.
@@ -106,7 +105,6 @@ function OSGenerator:new(width, height, nbSteps)
     OSGenerator.__index = OSGenerator
     setmetatable(OSGenerator, { __index = getmetatable(obj) })
     setmetatable(obj, OSGenerator)
-    obj.cellStates = CELL_STATES
     obj._nbSteps = nbSteps
     return obj
 end
@@ -170,13 +168,13 @@ function OSGenerator:generate()
             local rowsCond = (i % 2 == 0 and j > 1 and j < self.width and i < self.height)
             local lastColCond = (i > 1 and i < self.height and j == self.width - 1)
             if rowsCond or lastColCond then
-                table.insert(updates, stateUpdate.new(i, j, CELL_STATES.VISITED, 0))
+                table.insert(updates, stateUpdate.new(i, j, originShiftGenerator.CELL_STATES.VISITED, 0))
             else
-                table.insert(updates, stateUpdate.new(i, j, CELL_STATES.WALL, 0))
+                table.insert(updates, stateUpdate.new(i, j, originShiftGenerator.CELL_STATES.WALL, 0))
             end
         end
     end
-    table.insert(updates, self:_updateCell(self._root.coords, CELL_STATES.SELECTED))
+    table.insert(updates, self:_updateCell(self._root.coords, originShiftGenerator.CELL_STATES.SELECTED))
     coroutine.yield(updates)
 
     -- Generation loop
@@ -187,13 +185,13 @@ function OSGenerator:generate()
 
         coroutine.yield({
             -- Close the wall between the new root and its parent
-            self:_updateWall(nextRootCoords, nextRoot.parent.coords, CELL_STATES.WALL),
+            self:_updateWall(nextRootCoords, nextRoot.parent.coords, originShiftGenerator.CELL_STATES.WALL),
             -- THEN break the wall between the previous root and the new root
-            self:_updateWall(self._root.coords, nextRootCoords, CELL_STATES.VISITED),
+            self:_updateWall(self._root.coords, nextRootCoords, originShiftGenerator.CELL_STATES.VISITED),
             -- Deselect the previous root
-            self:_updateCell(self._root.coords, CELL_STATES.VISITED),
+            self:_updateCell(self._root.coords, originShiftGenerator.CELL_STATES.VISITED),
             -- Select the next root
-            self:_updateCell(nextRootCoords, CELL_STATES.SELECTED),
+            self:_updateCell(nextRootCoords, originShiftGenerator.CELL_STATES.SELECTED),
         })
 
         -- Update nodes linking
@@ -205,7 +203,7 @@ function OSGenerator:generate()
         self._count = self._count - 1
     end
     -- Deselect the root
-    coroutine.yield({ self:_updateCell(self._root.coords, CELL_STATES.VISITED) })
+    coroutine.yield({ self:_updateCell(self._root.coords, originShiftGenerator.CELL_STATES.VISITED) })
 end
 
 --[[ PUBLIC ]]

@@ -1,16 +1,16 @@
 ---@module 'ccmaze.generators.abstract'
-local abstractGenerator = {}
+local abstractGenerator = {
+    CELL_STATES = {}
+}
 
 --[[ PRIVATE ]]
 
 ---@class Generator Represents the generator for a maze with specified width and height.
 ---@field width integer The width of the maze.
 ---@field height integer The height of the maze.
----@field cellStates table Enum of the possible state of a cell.
 local Generator = {
     width = 0,
-    height = 0,
-    cellStates = {}
+    height = 0
 }
 
 -- Constructor for creating a generator with the specified width and height of the maze.
@@ -19,7 +19,7 @@ local Generator = {
 ---@return Generator # A new Generator object ready to produce maze updates.
 function Generator:new(width, height)
     Generator.__index = Generator
-    local obj = { width = width, height = height, cellStates = {} }
+    local obj = { width = width, height = height}
     setmetatable(obj, Generator)
     return obj
 end

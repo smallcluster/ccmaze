@@ -40,21 +40,21 @@ local w, h = m.getSize()
 -- Define the color palettes for each generator.
 local colorPalettes = {
     kg = {
-        [kg.cellStates.VISITED]   = colors.lime,
-        [kg.cellStates.UNVISITED] = colors.lime,
-        [kg.cellStates.WALL]      = colors.black,
-        [kg.cellStates.SELECTED]  = colors.blue
+        [kg.CELL_STATES.VISITED]   = colors.lime,
+        [kg.CELL_STATES.UNVISITED] = colors.lime,
+        [kg.CELL_STATES.WALL]      = colors.black,
+        [kg.CELL_STATES.SELECTED]  = colors.blue
     },
     dsg = {
-        [dsg.cellStates.VISITED]   = colors.lime,
-        [dsg.cellStates.UNVISITED] = colors.gray,
-        [dsg.cellStates.WALL]      = colors.black,
-        [dsg.cellStates.SELECTED]  = colors.blue
+        [dsg.CELL_STATES.VISITED]   = colors.lime,
+        [dsg.CELL_STATES.UNVISITED] = colors.gray,
+        [dsg.CELL_STATES.WALL]      = colors.black,
+        [dsg.CELL_STATES.SELECTED]  = colors.blue
     },
     osg = {
-        [osg.cellStates.VISITED]  = colors.lime,
-        [osg.cellStates.WALL]     = colors.black,
-        [osg.cellStates.SELECTED] = colors.blue
+        [osg.CELL_STATES.VISITED]  = colors.lime,
+        [osg.CELL_STATES.WALL]     = colors.black,
+        [osg.CELL_STATES.SELECTED] = colors.blue
     } 
 }
 
