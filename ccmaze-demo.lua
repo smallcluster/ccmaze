@@ -16,10 +16,10 @@ local TEXT_SCALE = tonumber(args[2] or "1.0")
 -- Imports
 local ccmaze = require("ccmaze")
 
--- ccmaze exists in two versions: modular and minimized.
+-- ccmaze exists in two versions: modular and single file.
 -- To ensure compatibility with both, we use ccmaze.require instead of Lua's built-in require.
 -- In the modular version, ccmaze.require is the same as the standard require.
--- In the minimized version, it uses an internal lookup table to simulate module loading.
+-- In the single file version, it uses an internal lookup table to simulate module loading.
 -- By following this pattern, your code will work seamlessly with either version.
 local maze = ccmaze.require("ccmaze.maze")
 local kg = ccmaze.require("ccmaze.generators.kruskal")
@@ -36,35 +36,51 @@ m.clear()
 local w, h = m.getSize()
 
 -- Some generators and display settings
+
+-- Define the color palettes for each generator.
+local colorPalettes = {
+    kg = {
+        [kg.cellStates.VISITED]   = colors.lime,
+        [kg.cellStates.UNVISITED] = colors.lime,
+        [kg.cellStates.WALL]      = colors.black,
+        [kg.cellStates.SELECTED]  = colors.blue
+    },
+    dsg = {
+        [dsg.cellStates.VISITED]   = colors.lime,
+        [dsg.cellStates.UNVISITED] = colors.gray,
+        [dsg.cellStates.WALL]      = colors.black,
+        [dsg.cellStates.SELECTED]  = colors.blue
+    },
+    osg = {
+        [osg.cellStates.VISITED]  = colors.lime,
+        [osg.cellStates.WALL]     = colors.black,
+        [osg.cellStates.SELECTED] = colors.blue
+    } 
+}
+
+-- Each scene is a table with a name, a generator, and a colorMap function.
 local scenes = {
     {
         name = "Kruskal",
         generator = kg.new(w, h),
-        color_table = {
-            colors.lime,
-            colors.black,
-            colors.gray,
-            colors.blue
-        }
+        -- The colorMap function maps the generator's cell states to colors.
+        colorMap = function(state)
+            return colorPalettes.kg[state] or colors.white
+        end
     },
     {
         name = "Deep-first",
         generator = dsg.new(w, h),
-        color_table = {
-            colors.lime,
-            colors.black,
-            colors.gray,
-            colors.blue
-        }
+        colorMap = function(state)
+            return colorPalettes.dsg[state] or colors.white
+        end
     },
     {
         name = "Origin-shift",
         generator = osg.new(w, h, w * h * 2),
-        color_table = {
-            colors.lime,
-            colors.black,
-            colors.blue
-        }
+        colorMap = function(state)
+            return colorPalettes.osg[state] or colors.white
+        end
     }
 }
 
@@ -85,7 +101,7 @@ while true do
     local producer = scene.generator:producer()
     -- To display each maze update, we can use a special filter that wraps
     -- our generator producer :
-    local drawFilter = ccFilters.updateScreen(producer, m, scene.color_table)
+    local drawFilter = ccFilters.updateScreen(producer, m, scene.colorMap)
     -- We can also show the progression by composing our wrapper with an other filter:
     local finalProducer = ccFilters.displayProgress(
         drawFilter,
