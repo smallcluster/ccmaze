@@ -1,6 +1,6 @@
 # ccmaze
 
-![](imgs/header.gif?raw=true)
+![](imgs/header.webp?raw=true)
 
 A lua library for generating mazes represented with a grid of states model. 
 
