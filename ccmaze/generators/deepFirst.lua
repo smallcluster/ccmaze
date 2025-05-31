@@ -43,7 +43,8 @@ local DFSGenerator = {
     _cells = {},
     _path = {},
     _count = 0,
-    _startCoords = {}
+    _startCoords = {},
+    cellStates = CELL_STATES
 }
 
 ---@return number # The normalized generation progression.

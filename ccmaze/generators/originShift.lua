@@ -58,7 +58,8 @@ local OSGenerator = {
     _nodes = {},
     _count = 0,
     _nbSteps = 0,
-    _root = {}
+    _root = {},
+    cellStates = CELL_STATES
 }
 
 ---@return number # The normalized generation progression.

@@ -72,6 +72,7 @@ local KruskalGenerator = {
     _sets = {},
     _walls = {},
     _count = 0,
+    cellStates = CELL_STATES
 }
 
 ---@return number # The normalized generation progression.
