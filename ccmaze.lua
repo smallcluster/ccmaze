@@ -46,7 +46,7 @@ local Maze = {
 -- Note: update are consumed for left to right in the given array by the generator.
 ---@param producer thread The coroutine of the maze generator that produces updates.
 ---@param onUpdates function An optional post processing callback on retrieved updates.
-function Maze:update_grid(producer, onUpdates)
+function Maze:rebuild(producer, onUpdates)
     repeat
         local status, updates = coroutine.resume(producer)
         if updates ~= nil and status then
@@ -74,7 +74,7 @@ function Maze:new(width, height, producer, onUpdates)
     for i = 1, width*height, 1 do
         m.cells[i] = 0
     end
-    m:update_grid(producer, optFunc.create1(onUpdates))
+    m:rebuild(producer, optFunc.create1(onUpdates))
     return m
 end
 
@@ -250,18 +250,18 @@ return computerCraft
 end
 files['ccmaze.generators.abstract'] = function(...)
 ---@module 'ccmaze.generators.abstract'
-local abstractGenerator = {}
+local abstractGenerator = {
+    CELL_STATES = {}
+}
 
 --[[ PRIVATE ]]
 
 ---@class Generator Represents the generator for a maze with specified width and height.
 ---@field width integer The width of the maze.
 ---@field height integer The height of the maze.
----@field cellStates table Enum of the possible state of a cell.
 local Generator = {
     width = 0,
-    height = 0,
-    cellStates = {}
+    height = 0
 }
 
 -- Constructor for creating a generator with the specified width and height of the maze.
@@ -270,7 +270,7 @@ local Generator = {
 ---@return Generator # A new Generator object ready to produce maze updates.
 function Generator:new(width, height)
     Generator.__index = Generator
-    local obj = { width = width, height = height, cellStates = {} }
+    local obj = { width = width, height = height}
     setmetatable(obj, Generator)
     return obj
 end
@@ -333,21 +333,21 @@ files['ccmaze.generators.deepFirst'] = function(...)
     which can be used to visualize the maze construction in a step by step manner.
 ]]
 ---@module 'ccmaze.generators.deepSearch'
-local deepFirstGenerator = {}
+local deepFirstGenerator = {
+    ---@enum deepFirstGenerator.CELL_STATES Define all possible cell states for the generator.
+    CELL_STATES = {
+        VISITED = 1,
+        WALL = 2,
+        UNVISITED = 3,
+        SELECTED = 4
+    }
+}
 
 --[[ PRIVATE ]]
 
 local stateUpdate = require("ccmaze.stateUpdate")
 local abstractGenerator = require("ccmaze.generators.abstract")
 local stack = require("ccmaze.utils.stack")
-
----@enum CELL_STATES Define all possible cell states for the generator.
-local CELL_STATES = {
-    VISITED = 1,
-    WALL = 2,
-    UNVISITED = 3,
-    SELECTED = 4
-}
 
 ---@class DFSGenerator: Generator Implements a maze generator using a recursive backtracking algorithm.
 ---@field private _internalWidth integer Width of the internal maze (excluding wall cells).
@@ -363,7 +363,6 @@ local DFSGenerator = {
     _path = {},
     _count = 0,
     _startCoords = {},
-    cellStates = CELL_STATES
 }
 
 ---@return number # The normalized generation progression.
@@ -382,12 +381,12 @@ function DFSGenerator:_init()
     -- All cells are unvisited
     for i = 1, self._internalHeight, 1 do
         for j = 1, self._internalWidth, 1 do
-            self:_setState({ i = i, j = j }, CELL_STATES.UNVISITED)
+            self:_setState({ i = i, j = j }, deepFirstGenerator.CELL_STATES.UNVISITED)
         end
     end
     -- Set the first cell coordinates (top-left) to be the start of the path
     self._startCoords = { i = math.random(self._internalHeight), j = math.random(self._internalWidth) }
-    self:_setState(self._startCoords, CELL_STATES.VISITED)
+    self:_setState(self._startCoords, deepFirstGenerator.CELL_STATES.VISITED)
     self._path:push(self._startCoords)
 end
 
@@ -400,7 +399,6 @@ function DFSGenerator:new(width, height)
     DFSGenerator.__index = DFSGenerator
     setmetatable(DFSGenerator, { __index = getmetatable(obj) })
     setmetatable(obj, DFSGenerator)
-    obj.cellStates = CELL_STATES
     return obj
 end
 
@@ -423,14 +421,14 @@ end
 
 -- Get the state of a cell in the internal maze.
 ---@param coords table The coordinates of the cell.
----@return CELL_STATES # The state for the corresponding cell.
+---@return deepFirstGenerator.CELL_STATES # The state for the corresponding cell.
 function DFSGenerator:_getState(coords)
     return self._cells[(coords.i - 1) * self._internalWidth + coords.j]
 end
 
 -- Set the state of a cell in the internal maze.
 ---@param coords table The coordinates of the cell.
----@param state CELL_STATES The new state for the cell.
+---@param state deepFirstGenerator.CELL_STATES The new state for the cell.
 function DFSGenerator:_setState(coords, state)
     self._cells[(coords.i - 1) * self._internalWidth + coords.j] = state
 end
@@ -439,7 +437,7 @@ end
 ---@param coords table The coordinates of the cell.
 ---@return boolean # True if the cell is unvisited.
 function DFSGenerator:_isUnvisited(coords)
-    return self:_getState(coords) == CELL_STATES.UNVISITED
+    return self:_getState(coords) == deepFirstGenerator.CELL_STATES.UNVISITED
 end
 
 -- Try to get the position of a random unvisited neighbor cell.
@@ -479,14 +477,14 @@ function DFSGenerator:generate()
     for i = 1, self.height, 1 do
         for j = 1, self.width, 1 do
             if (i % 2 == 0) and (j % 2 == 0) and i < self.height and j < self.width then
-                table.insert(updates, stateUpdate.new(i, j, CELL_STATES.UNVISITED, 0))
+                table.insert(updates, stateUpdate.new(i, j, deepFirstGenerator.CELL_STATES.UNVISITED, 0))
             else
-                table.insert(updates, stateUpdate.new(i, j, CELL_STATES.WALL, 0))
+                table.insert(updates, stateUpdate.new(i, j, deepFirstGenerator.CELL_STATES.WALL, 0))
             end
         end
     end
     -- Select the starting position
-    table.insert(updates, self:_updateCell(self._path:peek(), CELL_STATES.SELECTED))
+    table.insert(updates, self:_updateCell(self._path:peek(), deepFirstGenerator.CELL_STATES.SELECTED))
     coroutine.yield(updates)
 
     -- Generation loop
@@ -497,7 +495,7 @@ function DFSGenerator:generate()
         -- Visit the selected cell in the internal maze
         if self:_isUnvisited(coords) then
             self._count = self._count - 1
-            self:_setState(coords, CELL_STATES.VISITED)
+            self:_setState(coords, deepFirstGenerator.CELL_STATES.VISITED)
         end
 
         -- Gets an unvisited neighbors
@@ -508,20 +506,20 @@ function DFSGenerator:generate()
             self._path:push(nextCoords)
             -- Break the wall, deselect the current cell and select the next one
             coroutine.yield({
-                self:_updateWall(coords, nextCoords, CELL_STATES.VISITED),
-                self:_updateCell(coords, CELL_STATES.VISITED),
-                self:_updateCell(nextCoords, CELL_STATES.SELECTED),
+                self:_updateWall(coords, nextCoords, deepFirstGenerator.CELL_STATES.VISITED),
+                self:_updateCell(coords, deepFirstGenerator.CELL_STATES.VISITED),
+                self:_updateCell(nextCoords, deepFirstGenerator.CELL_STATES.SELECTED),
             })
         else
             -- Deselect the current cell and select the previous one in the path
             coroutine.yield({
-                self:_updateCell(coords, CELL_STATES.VISITED),
-                self:_updateCell(self._path:peekOr(self._startCoords), CELL_STATES.SELECTED),
+                self:_updateCell(coords, deepFirstGenerator.CELL_STATES.VISITED),
+                self:_updateCell(self._path:peekOr(self._startCoords), deepFirstGenerator.CELL_STATES.SELECTED),
             })
         end
     end
     -- Deselect the last selected cell
-    coroutine.yield({ self:_updateCell(self._path:popOr(self._startCoords), CELL_STATES.VISITED) })
+    coroutine.yield({ self:_updateCell(self._path:popOr(self._startCoords), deepFirstGenerator.CELL_STATES.VISITED) })
 end
 
 --[[ PUBLIC ]]
@@ -554,7 +552,15 @@ files['ccmaze.generators.kruskal'] = function(...)
     which can be used to visualize the maze construction in a step by step manner.
 ]]
 ---@module 'ccmaze.generators.Kruskal'
-local kruskalGenerator = {}
+local kruskalGenerator = {
+    ---@enum kruskalGenerator.CELL_STATES Define all possible cell states for the generator.
+    CELL_STATES = {
+        VISITED = 1,
+        WALL = 2,
+        UNVISITED = 3,
+        SELECTED = 4
+    }
+}
 
 ---[[ PRIVATE ]]
 
@@ -590,15 +596,6 @@ function Wall.new(i, j, direction)
     return { i = i, j = j, direction = direction }
 end
 
----@enum CELL_STATES Define all possible cell states for the generator.
-local CELL_STATES = {
-    VISITED = 1,
-    WALL = 2,
-    UNVISITED = 3,
-    SELECTED = 4
-}
-
-
 ---@class KruskalGenerator : Generator Implements a maze generator using Kruskal's algorithm.
 ---@field private _internalWidth integer Width of the internal maze (excluding wall cells).
 ---@field private _internalHeight integer Height of the internal maze (excluding wall cells).
@@ -610,8 +607,7 @@ local KruskalGenerator = {
     _internalHeight = 0,
     _sets = {},
     _walls = {},
-    _count = 0,
-    cellStates = CELL_STATES
+    _count = 0
 }
 
 ---@return number # The normalized generation progression.
@@ -657,7 +653,6 @@ function KruskalGenerator:new(width, height)
     KruskalGenerator.__index = KruskalGenerator
     setmetatable(KruskalGenerator, { __index = getmetatable(obj) })
     setmetatable(obj, KruskalGenerator)
-    obj.cellStates = CELL_STATES
     return obj
 end
 
@@ -706,14 +701,14 @@ function KruskalGenerator:generate()
     for i = 1, self.height, 1 do
         for j = 1, self.width, 1 do
             if (i % 2 == 0) and (j % 2 == 0) and i < self.height and j < self.width  then
-                table.insert(updates, stateUpdate.new(i, j, CELL_STATES.UNVISITED, 0))
+                table.insert(updates, stateUpdate.new(i, j, kruskalGenerator.CELL_STATES.UNVISITED, 0))
             else
-                table.insert(updates, stateUpdate.new(i, j, CELL_STATES.WALL, 0))
+                table.insert(updates, stateUpdate.new(i, j, kruskalGenerator.CELL_STATES.WALL, 0))
             end
         end
     end
     -- Select the first wall
-    coroutine.yield({ self:_updateFromWall(self._walls:peek(), CELL_STATES.SELECTED) })
+    coroutine.yield({ self:_updateFromWall(self._walls:peek(), kruskalGenerator.CELL_STATES.SELECTED) })
     coroutine.yield(updates)
 
     -- Generation loop
@@ -726,9 +721,9 @@ function KruskalGenerator:generate()
         -- Can't break an edge inside the same set of cells
         if sa:connected(sb) then
             -- Deselect this wall and select the next wall
-            local updates = { self:_updateFromWall(wall, CELL_STATES.WALL) }
+            local updates = { self:_updateFromWall(wall, kruskalGenerator.CELL_STATES.WALL) }
             if not self._walls:isEmpty() then
-                table.insert(updates, self:_updateFromWall(self._walls:peek(), CELL_STATES.SELECTED))
+                table.insert(updates, self:_updateFromWall(self._walls:peek(), kruskalGenerator.CELL_STATES.SELECTED))
             end
             coroutine.yield(updates)
         else
@@ -736,14 +731,14 @@ function KruskalGenerator:generate()
             self._count = self._count - 1
             local updates = {
                 -- Break the wall
-                self:_updateFromWall(wall, CELL_STATES.VISITED),
+                self:_updateFromWall(wall, kruskalGenerator.CELL_STATES.VISITED),
                 -- Makes sure the separating cells are visited
-                self:_updateFromSet(sa, CELL_STATES.VISITED),
-                self:_updateFromSet(sb, CELL_STATES.VISITED)
+                self:_updateFromSet(sa, kruskalGenerator.CELL_STATES.VISITED),
+                self:_updateFromSet(sb, kruskalGenerator.CELL_STATES.VISITED)
             }
             -- Select the next wall if possible
             if not self._walls:isEmpty() then
-                table.insert(updates, self:_updateFromWall(self._walls:peek(), CELL_STATES.SELECTED))
+                table.insert(updates, self:_updateFromWall(self._walls:peek(), kruskalGenerator.CELL_STATES.SELECTED))
             end
             coroutine.yield(updates)
             -- Merge regions
@@ -752,7 +747,7 @@ function KruskalGenerator:generate()
     end
     -- Remove selection
     if not self._walls:isEmpty() then
-        coroutine.yield({ self:_updateFromWall(self._walls:peek(), CELL_STATES.WALL) })
+        coroutine.yield({ self:_updateFromWall(self._walls:peek(), kruskalGenerator.CELL_STATES.WALL) })
     end
 end
 
@@ -788,7 +783,14 @@ files['ccmaze.generators.originShift'] = function(...)
     which can be used to visualize the maze construction in a step by step manner.
 ]]
 ---@module 'ccmaze.generators.originShift'
-local originShiftGenerator = {}
+local originShiftGenerator = {
+    ---@enum originShiftGenerator.CELL_STATES Define all possible cell states for the generator.
+    CELL_STATES = {
+        VISITED = 1,
+        WALL = 2,
+        SELECTED = 3
+    }
+}
 
 --[[ PRIVATE ]]
 
@@ -809,13 +811,6 @@ function Node.new(i, j)
     return { parent = nil, coords = { i = i, j = j } }
 end
 
----@enum CELL_STATES Define all possible cell states for the generator.
-local CELL_STATES = {
-    VISITED = 1,
-    WALL = 2,
-    SELECTED = 3
-}
-
 ---@class OSGenerator: Generator Implements a maze generator using a recursive backtracking algorithm.
 ---@field private _internalWidth integer Width of the internal maze (excluding wall cells).
 ---@field private _internalHeight integer Height of the internal maze (excluding wall cells).
@@ -829,8 +824,7 @@ local OSGenerator = {
     _nodes = {},
     _count = 0,
     _nbSteps = 0,
-    _root = {},
-    cellStates = CELL_STATES
+    _root = {}
 }
 
 ---@return number # The normalized generation progression.
@@ -877,7 +871,6 @@ function OSGenerator:new(width, height, nbSteps)
     OSGenerator.__index = OSGenerator
     setmetatable(OSGenerator, { __index = getmetatable(obj) })
     setmetatable(obj, OSGenerator)
-    obj.cellStates = CELL_STATES
     obj._nbSteps = nbSteps
     return obj
 end
@@ -941,13 +934,13 @@ function OSGenerator:generate()
             local rowsCond = (i % 2 == 0 and j > 1 and j < self.width and i < self.height)
             local lastColCond = (i > 1 and i < self.height and j == self.width - 1)
             if rowsCond or lastColCond then
-                table.insert(updates, stateUpdate.new(i, j, CELL_STATES.VISITED, 0))
+                table.insert(updates, stateUpdate.new(i, j, originShiftGenerator.CELL_STATES.VISITED, 0))
             else
-                table.insert(updates, stateUpdate.new(i, j, CELL_STATES.WALL, 0))
+                table.insert(updates, stateUpdate.new(i, j, originShiftGenerator.CELL_STATES.WALL, 0))
             end
         end
     end
-    table.insert(updates, self:_updateCell(self._root.coords, CELL_STATES.SELECTED))
+    table.insert(updates, self:_updateCell(self._root.coords, originShiftGenerator.CELL_STATES.SELECTED))
     coroutine.yield(updates)
 
     -- Generation loop
@@ -958,13 +951,13 @@ function OSGenerator:generate()
 
         coroutine.yield({
             -- Close the wall between the new root and its parent
-            self:_updateWall(nextRootCoords, nextRoot.parent.coords, CELL_STATES.WALL),
+            self:_updateWall(nextRootCoords, nextRoot.parent.coords, originShiftGenerator.CELL_STATES.WALL),
             -- THEN break the wall between the previous root and the new root
-            self:_updateWall(self._root.coords, nextRootCoords, CELL_STATES.VISITED),
+            self:_updateWall(self._root.coords, nextRootCoords, originShiftGenerator.CELL_STATES.VISITED),
             -- Deselect the previous root
-            self:_updateCell(self._root.coords, CELL_STATES.VISITED),
+            self:_updateCell(self._root.coords, originShiftGenerator.CELL_STATES.VISITED),
             -- Select the next root
-            self:_updateCell(nextRootCoords, CELL_STATES.SELECTED),
+            self:_updateCell(nextRootCoords, originShiftGenerator.CELL_STATES.SELECTED),
         })
 
         -- Update nodes linking
@@ -976,7 +969,7 @@ function OSGenerator:generate()
         self._count = self._count - 1
     end
     -- Deselect the root
-    coroutine.yield({ self:_updateCell(self._root.coords, CELL_STATES.VISITED) })
+    coroutine.yield({ self:_updateCell(self._root.coords, originShiftGenerator.CELL_STATES.VISITED) })
 end
 
 --[[ PUBLIC ]]
