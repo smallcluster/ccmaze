@@ -2,13 +2,17 @@
 
 ## InstallerBuilder
 
-Usage :
+*To generate the module downloader to help computercraft users.*
+
+**Usage** :
 
 ```bash
 python ./tools/installer_builder.py
 ```
 
 ## Packer
+
+*To pack all the submodules in a single file.*
 
 **Usage** :
 
@@ -17,6 +21,8 @@ python ./tools/packer.py
 ```
 
 ## Minify
+
+*To reduce the size of the packed file.*
 
 **Requirement** : 
 
