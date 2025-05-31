@@ -18,7 +18,7 @@ Here is a quick comparison :
 | lua module           | yes     | yes        | ~46,6ko |
 | single minified file | no      | no         | ~12,8ko |
 
-All versions are interchangeable by exposing the same *require* API for their submodules. Take a look at the provided demo code to learn how to use ccmaze.
+Take a look at the provided demo code to learn how to use ccmaze.
 
 ### Single Lua file
 
