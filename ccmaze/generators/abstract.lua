@@ -19,7 +19,7 @@ local Generator = {
 ---@return Generator # A new Generator object ready to produce maze updates.
 function Generator:new(width, height)
     Generator.__index = Generator
-    local obj = { width = width, height = height}
+    local obj = { width = width, height = height }
     setmetatable(obj, Generator)
     return obj
 end

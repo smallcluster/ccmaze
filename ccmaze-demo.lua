@@ -55,7 +55,7 @@ local colorPalettes = {
         [osg.CELL_STATES.VISITED]  = colors.lime,
         [osg.CELL_STATES.WALL]     = colors.black,
         [osg.CELL_STATES.SELECTED] = colors.blue
-    } 
+    }
 }
 
 -- Each scene is a table with a name, a generator, and a colorMap function.
@@ -117,7 +117,7 @@ while true do
     -- Instead we use a postprocessing callback called on this "thread" after each updates.
     -- Since the minimal sleep time possible is 1 game tick (0.05s), we remove the wait postprocess
     -- if it's lower (beware, now the generation can't run more than 30seconds before computerCraft terminate this program).
-    local postProcess = function (_) return _ end -- A callback that do nothing
+    local postProcess = function(_) return _ end  -- A callback that do nothing
     if WAIT_TIME >= 0.05 then
         postProcess = ccPostProcess.wait(WAIT_TIME)
     end

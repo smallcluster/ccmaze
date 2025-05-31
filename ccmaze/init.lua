@@ -4,4 +4,4 @@
     without changing the require statements in the user code.
 --]]
 
-return {require = require}
+return { require = require }

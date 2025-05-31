@@ -125,7 +125,7 @@ end
 function KruskalGenerator:_getSets(wall)
     if wall.direction == DIRECTIONS.VERTICAL then
         return self._sets[(wall.i - 2) * self._internalWidth + wall.j], self._sets
-        [(wall.i - 1) * self._internalWidth + wall.j]
+            [(wall.i - 1) * self._internalWidth + wall.j]
     else
         return self._sets[(wall.i - 1) * self._internalWidth + wall.j - 1],
             self._sets[(wall.i - 1) * self._internalWidth + wall.j]
@@ -163,7 +163,7 @@ function KruskalGenerator:generate()
     local updates = {}
     for i = 1, self.height, 1 do
         for j = 1, self.width, 1 do
-            if (i % 2 == 0) and (j % 2 == 0) and i < self.height and j < self.width  then
+            if (i % 2 == 0) and (j % 2 == 0) and i < self.height and j < self.width then
                 table.insert(updates, stateUpdate.new(i, j, kruskalGenerator.CELL_STATES.UNVISITED, 0))
             else
                 table.insert(updates, stateUpdate.new(i, j, kruskalGenerator.CELL_STATES.WALL, 0))
