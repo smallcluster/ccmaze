@@ -177,12 +177,12 @@ local builder = require("ccmaze.filters.builder")
 
 ---@param updates table Array of StateUpdate.
 ---@param monitor any The ComputerCraft monitor peripheral to update.
----@param color_table table A mapping of states to colors for the monitor.
+---@param colorMap table A mapping of states to colors for the monitor.
 ---@return table updates
-local function _updateScreen(updates, monitor, color_table)
+local function _updateScreen(updates, monitor, colorMap)
     for i = 1, #updates, 1 do
         local u = updates[i]
-        monitor.setBackgroundColor(color_table[u.state])
+        monitor.setBackgroundColor(colorMap(u.state))
         monitor.setCursorPos(u.j, u.i)
         monitor.write(" ")
     end
@@ -227,10 +227,10 @@ end
 -- Creates a filter that updates a ComputerCraft monitor to display the current state of the maze.
 ---@param producer thread The coroutine that produces updates.
 ---@param monitor any The ComputerCraft monitor peripheral to update.
----@param color_table table A mapping of states to colors for the monitor.
+---@param colorMap table A mapping of states to colors for the monitor.
 ---@return thread # The coroutine acting as a producer with a filter.
-function computerCraft.updateScreen(producer, monitor, color_table)
-    return builder.build(producer, _updateScreen, { monitor, color_table })
+function computerCraft.updateScreen(producer, monitor, colorMap)
+    return builder.build(producer, _updateScreen, { monitor, colorMap })
 end
 
 -- Creates a filter that display the current progress of the generationon on a monitor.
@@ -362,7 +362,8 @@ local DFSGenerator = {
     _cells = {},
     _path = {},
     _count = 0,
-    _startCoords = {}
+    _startCoords = {},
+    cellStates = CELL_STATES
 }
 
 ---@return number # The normalized generation progression.
@@ -610,6 +611,7 @@ local KruskalGenerator = {
     _sets = {},
     _walls = {},
     _count = 0,
+    cellStates = CELL_STATES
 }
 
 ---@return number # The normalized generation progression.
@@ -827,7 +829,8 @@ local OSGenerator = {
     _nodes = {},
     _count = 0,
     _nbSteps = 0,
-    _root = {}
+    _root = {},
+    cellStates = CELL_STATES
 }
 
 ---@return number # The normalized generation progression.
