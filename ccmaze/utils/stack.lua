@@ -24,13 +24,6 @@ function Stack:new(o)
     return o
 end
 
--- Constructor for creating a new prefilled stack.
----@param t table The data to use with this stack.
----@return Stack # A new prefilled stack.
-function Stack:makeStack(t)
-    return Stack:new { _data = t }
-end
-
 -- Check if the stack is empty.
 ---@return boolean # True if the stack is empty.
 function Stack:isEmpty()
@@ -100,7 +93,7 @@ end
 ---@param t table The data to use with this stack.
 ---@return Stack # A new prefilled stack.
 function stack.makeStack(t)
-    return Stack:makeStack(t)
+    return Stack:new { _data = t }
 end
 
 return stack

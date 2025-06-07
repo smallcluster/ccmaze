@@ -32,13 +32,6 @@ function DSet:new(o)
     return o
 end
 
--- Constructor for creating a new representative disjoint set with user data.
----@param data any The user data associated with the set.
----@return DSet # A new disjoint set.
-function DSet:makeSet(data)
-    return DSet:new { data = data, _parent = nil, _rang = 0 }
-end
-
 -- Union operation to merge two disjoint sets under a unique representative disjoint set.
 ---@param other DSet The other disjoint set to be united with the current set.
 function DSet:union(other)
@@ -87,7 +80,7 @@ end
 ---@param data any The user data associated with the set.
 ---@return DSet # A new disjoint set.
 function dSet.makeSet(data)
-    return DSet:makeSet(data)
+    return DSet:new { data = data, _parent = nil, _rang = 0 }
 end
 
 return dSet
