@@ -41,7 +41,7 @@ local w, h = m.getSize()
 local colorPalettes = {
     kg = {
         [kg.CELL_STATES.VISITED]   = colors.lime,
-        [kg.CELL_STATES.UNVISITED] = colors.lime,
+        [kg.CELL_STATES.UNVISITED] = colors.gray,
         [kg.CELL_STATES.WALL]      = colors.black,
         [kg.CELL_STATES.SELECTED]  = colors.blue
     },
