@@ -1,0 +1,28 @@
+@startuml
+
+maze --> filter: fetch update
+note right of filter
+    coroutine
+end note
+note left of maze
+    main 
+    thread
+end note
+activate maze
+activate filter
+filter --> generator: fetch update
+note right of generator
+    coroutine
+end note
+activate generator
+generator --> filter: grid update
+deactivate generator
+filter --> filter: use data and/or apply transform
+filter --> maze: forward transformed data
+deactivate filter
+maze --> maze: apply postprocessing
+maze --> maze: update internal grid
+maze --> filter: fetch next update
+deactivate maze
+
+@enduml

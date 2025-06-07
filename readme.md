@@ -10,7 +10,7 @@ The ccmaze library exist in 3 different versions :
 
 - As a **single lua file**: Auto generated from the lua module. Easier to get or share. It's the **recommended version for most user**.
 - As a **lua module**: This is the original source code. Recommended when learning ccmaze as its structuration also serves as documentation.
-- As a **single minified lua file**: Auto generated from the single file version. For when size matter, but debugging doesn't (cryptic obfuscation due to the aggressive minification process).
+- As a **single minified lua file**: Auto generated from the single file version with [luamin](https://github.com/mathiasbynens/luamin). For when size matter, but debugging doesn't (cryptic obfuscation due to the aggressive minification process).
 
 Here is a quick comparison :
 
@@ -69,5 +69,10 @@ wget https://raw.githubusercontent.com/smallcluster/ccmaze/refs/heads/master/ccm
 
 ## Architecture
 
-TODO
+### Consumer-Producer pattern cycle
 
+![](imgs/pattern.svg?raw=true)
+
+### UML diagram
+
+![](imgs/classes.svg?raw=true)

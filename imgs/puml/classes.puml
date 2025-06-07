@@ -1,0 +1,129 @@
+@startuml
+
+package ccmaze {
+    package generators {
+    abstract class AbstractGenerator{
+        + width: Integer
+        + height: Integer
+        {abstract} + producer(): Thread
+        {abstract} + generate(): Void
+        {abstract} - _init(): Void
+        {abstract} - _progression(): Float
+    }
+
+    package deepFirst {
+        class DeepFirstGenerator extends ccmaze.generators.AbstractGenerator {
+            {static} + new(width, height): DeepFirstGenerator
+        }
+        enum CELL_STATE {
+            VISITED
+            WALL
+            UNVISITED
+            SELECTED
+        }
+
+        DeepFirstGenerator .> CELL_STATE
+    }
+
+    package kruskal {
+        class KruskalGenerator extends ccmaze.generators.AbstractGenerator {
+            {static} + new(width, height): KruskalGenerator
+        }
+        enum CELL_STATE {
+            VISITED
+            WALL
+            UNVISITED
+            SELECTED
+        }
+        CELL_STATE <.. KruskalGenerator
+    }
+
+    package originShift {
+        class OriginShiftGenerator extends ccmaze.generators.AbstractGenerator {
+            {static} + new(width, height, nbSteps): OriginShiftGenerator
+        }
+        enum CELL_STATE {
+            VISITED
+            WALL
+            SELECTED
+        }
+        CELL_STATE ..> OriginShiftGenerator
+    }
+}
+    package filters {
+        abstract class builder {
+            {static} +build(producer, f, args): Thread
+        }
+        abstract class computerCraft {
+            {static} + updateScreen(...): Thread
+            {static} + updateScreen(...): Thread
+            {static} + displayProgress(...): Thread
+        }
+        computerCraft ..> builder
+    }
+    package postprocess{
+        abstract class builder {
+            {static} +build(f, args, onUpdates): Function
+        }
+        abstract class computerCraft {
+            {static} +wait(...): Function
+            {static} +updateScreen(...): Function
+        }
+        computerCraft ..> builder
+    }
+    package utils {
+       class DSet {
+        {static} + makeSet(data): DSet
+        + union(other): Void
+        + find(): DSet
+        + connected(other): Boolean
+       }
+       class Stack {
+        + isEmpty(): Boolean
+        + size(): Integer
+        + push(elem): Void
+        + pop(): Any
+        + popOr(default): Any
+        + peek(): Any
+        + peekOr(default): Any
+        + shuffle(): Void
+        {static} + makeStack(t): Stack
+        {static} + new(): Stack
+       }
+       abstract class shuffle {
+        {static} + inPlace(array): Void
+       } 
+       abstract class optFunc {
+        {static} + create1(f): Function
+       } 
+       Stack ..> shuffle
+    }
+    class Maze {
+        + width: Integer
+        + height: Integer
+        + cells: Integer[]
+        + rebuild(producer, onUpdates): Void
+        {static} + new(width, height, producer, onUpdates): Maze
+    }
+    class StateUpdate {
+        + i: Integer
+        + j: Integer
+        + state: Integer
+        + progress: Float
+        {static} + new(i,j,state,progress): StateUpdate
+    }
+    postprocess.builder .> utils.optFunc
+    Maze ...> utils.optFunc
+
+    generators.deepFirst.DeepFirstGenerator ..> StateUpdate
+    generators.deepFirst.DeepFirstGenerator *-- utils.Stack
+
+    generators.kruskal.KruskalGenerator ..> StateUpdate
+    generators.kruskal.KruskalGenerator "1" *-- "*" utils.DSet
+    generators.kruskal.KruskalGenerator *-- utils.Stack
+
+    generators.originShift.OriginShiftGenerator ..> StateUpdate
+
+}
+
+@enduml
