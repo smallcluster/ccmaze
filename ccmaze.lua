@@ -71,7 +71,7 @@ function Maze:new(width, height, producer, onUpdates)
     local m = { width = width, height = height, cells = {} }
     setmetatable(m, self)
     self.__index = self
-    for i = 1, width*height, 1 do
+    for i = 1, width * height, 1 do
         m.cells[i] = 0
     end
     m:rebuild(producer, optFunc.create1(onUpdates))
@@ -270,7 +270,7 @@ local Generator = {
 ---@return Generator # A new Generator object ready to produce maze updates.
 function Generator:new(width, height)
     Generator.__index = Generator
-    local obj = { width = width, height = height}
+    local obj = { width = width, height = height }
     setmetatable(obj, Generator)
     return obj
 end
@@ -662,7 +662,7 @@ end
 function KruskalGenerator:_getSets(wall)
     if wall.direction == DIRECTIONS.VERTICAL then
         return self._sets[(wall.i - 2) * self._internalWidth + wall.j], self._sets
-        [(wall.i - 1) * self._internalWidth + wall.j]
+            [(wall.i - 1) * self._internalWidth + wall.j]
     else
         return self._sets[(wall.i - 1) * self._internalWidth + wall.j - 1],
             self._sets[(wall.i - 1) * self._internalWidth + wall.j]
@@ -700,7 +700,7 @@ function KruskalGenerator:generate()
     local updates = {}
     for i = 1, self.height, 1 do
         for j = 1, self.width, 1 do
-            if (i % 2 == 0) and (j % 2 == 0) and i < self.height and j < self.width  then
+            if (i % 2 == 0) and (j % 2 == 0) and i < self.height and j < self.width then
                 table.insert(updates, stateUpdate.new(i, j, kruskalGenerator.CELL_STATES.UNVISITED, 0))
             else
                 table.insert(updates, stateUpdate.new(i, j, kruskalGenerator.CELL_STATES.WALL, 0))
@@ -1094,13 +1094,6 @@ function DSet:new(o)
     return o
 end
 
--- Constructor for creating a new representative disjoint set with user data.
----@param data any The user data associated with the set.
----@return DSet # A new disjoint set.
-function DSet:makeSet(data)
-    return DSet:new { data = data, _parent = nil, _rang = 0 }
-end
-
 -- Union operation to merge two disjoint sets under a unique representative disjoint set.
 ---@param other DSet The other disjoint set to be united with the current set.
 function DSet:union(other)
@@ -1149,7 +1142,7 @@ end
 ---@param data any The user data associated with the set.
 ---@return DSet # A new disjoint set.
 function dSet.makeSet(data)
-    return DSet:makeSet(data)
+    return DSet:new { data = data, _parent = nil, _rang = 0 }
 end
 
 return dSet
@@ -1223,13 +1216,6 @@ function Stack:new(o)
     return o
 end
 
--- Constructor for creating a new prefilled stack.
----@param t table The data to use with this stack.
----@return Stack # A new prefilled stack.
-function Stack:makeStack(t)
-    return Stack:new { _data = t }
-end
-
 -- Check if the stack is empty.
 ---@return boolean # True if the stack is empty.
 function Stack:isEmpty()
@@ -1299,7 +1285,7 @@ end
 ---@param t table The data to use with this stack.
 ---@return Stack # A new prefilled stack.
 function stack.makeStack(t)
-    return Stack:makeStack(t)
+    return Stack:new { _data = t }
 end
 
 return stack
