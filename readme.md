@@ -27,7 +27,7 @@ Take a look at the provided demo code to learn how to use ccmaze.
 Simply download the `ccmaze.lua` :
 
 ```shell
-wget https://raw.githubusercontent.com/smallcluster/ccmaze/v1.0.1/master/ccmaze.lua
+wget https://raw.githubusercontent.com/smallcluster/ccmaze/refs/heads/master/ccmaze.lua
 ```
 
 ### Single minified lua file 
@@ -35,7 +35,7 @@ wget https://raw.githubusercontent.com/smallcluster/ccmaze/v1.0.1/master/ccmaze.
 Simply download the `ccmaze-min.lua` as `ccmaze.lua` :
 
 ```shell
-wget https://raw.githubusercontent.com/smallcluster/ccmaze/v1.0.1/master/ccmaze-min.lua ccmaze.lua
+wget https://raw.githubusercontent.com/smallcluster/ccmaze/refs/heads/master/ccmaze-min.lua ccmaze.lua
 ```
 
 ### Lua module
@@ -43,7 +43,7 @@ wget https://raw.githubusercontent.com/smallcluster/ccmaze/v1.0.1/master/ccmaze-
 Since this version is composed of multiple files, a downloader is provided to easily fetch the library.
 
 ```shell
-wget https://raw.githubusercontent.com/smallcluster/ccmaze/v1.0.1/master/ccmaze-dl.lua
+wget https://raw.githubusercontent.com/smallcluster/ccmaze/refs/heads/master/ccmaze-dl.lua
 ```
 
 By running `ccmaze-dl.lua`, the module `ccmaze` will be downloaded in your working directory.
@@ -58,7 +58,7 @@ By running `ccmaze-dl.lua`, the module `ccmaze` will be downloaded in your worki
 A demo cycling through all available generator algorithm with visual animation is provided as an example (the animation at the top of this page) :
 
 ```shell
-wget https://raw.githubusercontent.com/smallcluster/ccmaze/v1.0.1/master/ccmaze-demo.lua
+wget https://raw.githubusercontent.com/smallcluster/ccmaze/refs/heads/master/ccmaze-demo.lua
 ```
 
 ## Available generators
